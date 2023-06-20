@@ -4,6 +4,9 @@
 - [What is Kafka](#what-is-kafka)
 - [Demo](#demo)
 - [When to use Kafka](#when-to-use-kafka)
+  - [High Throughput](#high-throughput)
+  - [Events which are processed by multiple consumers](#events-which-are-processed-by-multiple-consumers)
+  - [Decoupled systems](#decoupled-systems)
 - [When not to use Kafka](#when-not-to-use-kafka)
 - [Outro](#outro)
 - [Resources](#resources)
@@ -30,9 +33,26 @@ Kafka allows processing realtime data via a publish/subscribe architecture using
 
 # When to use Kafka
 
+## High Throughput
 Use Kafka if you need very high throughput. Kafka out-performs RabbitMQ on throughput: https://www.confluent.io/blog/kafka-fastest-messaging-system/#throughput-results, Kafka is good at horizontal scaling, whereas RabbitMQ doesn't have great horizontal scaling performance. RabbitMQ performs best with an empty queue because all the messages can be stored in memory, if the queue overflows to disk it RabbitMQ slows down greatly.
 
+## Events which are processed by multiple consumers
 If you need multiple consumers to process an event Kafka is a good option. Consumers can be split up into consumer groups which each have their own index per partition. This means that multiple consumer groups can read the same event. As opposed to a queue which deletes the message once it is read.
+
+For example, if you have an e-commerce site, when you have a customer order there may be multiple systems that need to process that event.
+
+![!test](./images/ecommerce-dot-com-kafka.svg)
+
+The event could be read by:
+- an accounting service to track sales
+- a fulfillment service which goes to the warehouse to fulfill the order
+- a recommendation service which provides recommendations to a customer based on their order history
+
+## Decoupled systems
+
+This is mostly true to queues in general.
+
+Kafka can be used as an interface between systems. Publishers can publish to a queue without knowing anything about the downstream systems. 
 
 # When not to use Kafka
 
